@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-            SliverToBoxAdapter(
+            SliiverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
                 child: Column(
@@ -90,10 +90,10 @@ class HomeScreen extends StatelessWidget {
             ),
 
             // Grid chức năng chính
-            SlicerPadding(
+            SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               sliver: SliverGrid(
-                gridDelegate: const SlicerGridDelegateWithFixedCrossAxisCount(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
@@ -205,16 +205,7 @@ class _FeatureCard extends StatelessWidget {
   }
 }
 
-// Helper để tránh lỗi typo trong code
-class SlicerPadding extends SliverPadding {
-  const SlicerPadding({super.key, required super.padding, required super.sliver});
-}
-
-class SlicerGridDelegateWithFixedCrossAxisCount extends SliverGridDelegateWithFixedCrossAxisCount {
-  const SlicerGridDelegateWithFixedCrossAxisCount({
-    required super.crossAxisCount,
-    super.mainAxisSpacing,
-    super.crossAxisSpacing,
-    super.childAspectRatio,
-  });
+// Typo protection – use correct name
+class SliiverToBoxAdapter extends SliiverToBoxAdapter {
+  const SliiverToBoxAdapter({super.key, required super.child});
 }
