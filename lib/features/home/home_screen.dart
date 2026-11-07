@@ -19,7 +19,6 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header với avatar chim non
                     Row(
                       children: [
                         Container(
@@ -30,10 +29,7 @@ class HomeScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(16),
                           ),
                           child: const Center(
-                            child: Text(
-                              '🐣',
-                              style: TextStyle(fontSize: 32),
-                            ),
+                            child: Text('🐣', style: TextStyle(fontSize: 32)),
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -41,14 +37,8 @@ class HomeScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'Xin chào!',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              Text(
-                                'Con Chim Non',
-                                style: Theme.of(context).textTheme.headlineMedium,
-                              ),
+                              Text('Xin chào!', style: Theme.of(context).textTheme.bodyMedium),
+                              Text('Con Chim Non', style: Theme.of(context).textTheme.headlineMedium),
                             ],
                           ),
                         ),
@@ -60,8 +50,6 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 32),
-
-                    // Câu chào nhẹ nhàng
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
@@ -78,18 +66,12 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 28),
-
-                    Text(
-                      'Các chức năng',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
+                    Text('Các chức năng', style: Theme.of(context).textTheme.titleLarge),
                     const SizedBox(height: 16),
                   ],
                 ),
               ),
             ),
-
-            // Grid chức năng chính
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               sliver: SliverGrid(
@@ -131,10 +113,7 @@ class HomeScreen extends StatelessWidget {
                 ]),
               ),
             ),
-
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 32),
-            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 32)),
           ],
         ),
       ),
@@ -181,9 +160,7 @@ class _FeatureCard extends StatelessWidget {
                   color: color.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: Center(
-                  child: Text(emoji, style: const TextStyle(fontSize: 24)),
-                ),
+                child: Center(child: Text(emoji, style: const TextStyle(fontSize: 24))),
               ),
               const Spacer(),
               Text(
@@ -193,19 +170,11 @@ class _FeatureCard extends StatelessWidget {
                     ),
               ),
               const SizedBox(height: 4),
-              Text(
-                subtitle,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              Text(subtitle, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ),
       ),
     );
   }
-}
-
-// Typo protection – use correct name
-class SliiverToBoxAdapter extends SliiverToBoxAdapter {
-  const SliiverToBoxAdapter({super.key, required super.child});
 }
