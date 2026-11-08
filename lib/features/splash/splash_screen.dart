@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/services/storage_service.dart';
 import '../../core/theme/app_theme.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,9 +19,15 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _goNext() async {
-    await Future.delayed(const Duration(milliseconds: 1800));
+    await Future.delayed(const Duration(milliseconds: 1600));
     if (!mounted) return;
-    context.go('/');
+
+    final done = StorageService().getSetting<bool>('onboarding_done') ?? false;
+    if (done) {
+      context.go('/');
+    } else {
+      context.go('/onboarding');
+    }
   }
 
   @override
