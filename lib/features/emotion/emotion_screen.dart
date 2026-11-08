@@ -53,11 +53,10 @@ class _EmotionScreenState extends State<EmotionScreen> {
             ),
             const SizedBox(height: 20),
 
-            // Grid cảm xúc
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SlicerGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
@@ -102,10 +101,7 @@ class _EmotionScreenState extends State<EmotionScreen> {
 
             if (_selectedEmotion != null) ...[
               const SizedBox(height: 28),
-              Text(
-                'Mức độ cảm xúc',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text('Mức độ cảm xúc', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               Row(
                 children: List.generate(5, (index) {
@@ -138,10 +134,7 @@ class _EmotionScreenState extends State<EmotionScreen> {
               ),
 
               const SizedBox(height: 28),
-              Text(
-                'Gợi ý giúp bạn',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
+              Text('Gợi ý giúp bạn', style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 12),
               ...(_strategies[_selectedEmotion] ?? []).map(
                 (tip) => Container(
@@ -168,7 +161,6 @@ class _EmotionScreenState extends State<EmotionScreen> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Lưu vào nhật ký
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Đã ghi nhận cảm xúc của bạn')),
                     );
@@ -182,9 +174,7 @@ class _EmotionScreenState extends State<EmotionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () {
-                    // TODO: Mở Tổ Ấm
-                  },
+                  onPressed: () {},
                   icon: const Icon(Icons.spa_rounded),
                   label: const Text('Vào Tổ Ấm (Không gian yên tĩnh)'),
                 ),
@@ -208,14 +198,5 @@ class _Emotion {
     required this.label,
     required this.emoji,
     required this.color,
-  });
-}
-
-class SlicerGridDelegateWithFixedCrossAxisCount extends SliverGridDelegateWithFixedCrossAxisCount {
-  const SlicerGridDelegateWithFixedCrossAxisCount({
-    required super.crossAxisCount,
-    super.mainAxisSpacing,
-    super.crossAxisSpacing,
-    super.childAspectRatio,
   });
 }
