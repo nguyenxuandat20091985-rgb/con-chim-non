@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/theme/app_theme.dart';
+import 'calm_space_screen.dart';
 
 class EmotionScreen extends StatefulWidget {
   const EmotionScreen({super.key});
@@ -174,7 +175,13 @@ class _EmotionScreenState extends State<EmotionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CalmSpaceScreen(),
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.spa_rounded),
                   label: const Text('Vào Tổ Ấm (Không gian yên tĩnh)'),
                 ),
