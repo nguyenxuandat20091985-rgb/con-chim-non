@@ -11,77 +11,74 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.background,
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliiverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header với avatar chim non
+              Row(
+                children: [
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: AppTheme.primary.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Center(
+                      child: Text('🐣', style: TextStyle(fontSize: 32)),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          width: 56,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            color: AppTheme.primary.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: const Center(
-                            child: Text('🐣', style: TextStyle(fontSize: 32)),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Xin chào!', style: Theme.of(context).textTheme.bodyMedium),
-                              Text('Con Chim Non', style: Theme.of(context).textTheme.headlineMedium),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () => context.push('/parent'),
-                          icon: const Icon(Icons.settings_rounded),
-                          color: AppTheme.textSecondary,
-                        ),
+                        Text('Xin chào!', style: Theme.of(context).textTheme.bodyMedium),
+                        Text('Con Chim Non', style: Theme.of(context).textTheme.headlineMedium),
                       ],
                     ),
-                    const SizedBox(height: 32),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primary.withOpacity(0.08),
-                        borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                  ),
+                  IconButton(
+                    onPressed: () => context.push('/parent'),
+                    icon: const Icon(Icons.settings_rounded),
+                    color: AppTheme.textSecondary,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+
+              // Câu chào
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                ),
+                child: Text(
+                  'Hôm nay bạn muốn làm gì nào?',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        color: AppTheme.primaryDark,
                       ),
-                      child: Text(
-                        'Hôm nay bạn muốn làm gì nào?',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: AppTheme.primaryDark,
-                            ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const SizedBox(height: 28),
-                    Text('Các chức năng', style: Theme.of(context).textTheme.titleLarge),
-                    const SizedBox(height: 16),
-                  ],
+                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
-            SliiverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              sliver: SliiverGrid(
-                gridDelegate: const SliiverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 16,
-                  crossAxisSpacing: 16,
-                  childAspectRatio: 1.05,
-                ),
-                delegate: SliiverChildListDelegate([
+              const SizedBox(height: 28),
+
+              Text('Các chức năng', style: Theme.of(context).textTheme.titleLarge),
+              const SizedBox(height: 16),
+
+              // Grid chức năng
+              GridView.count(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisCount: 2,
+                mainAxisSpacing: 16,
+                crossAxisSpacing: 16,
+                childAspectRatio: 1.05,
+                children: [
                   _FeatureCard(
                     emoji: '💬',
                     title: 'Giao tiếp',
@@ -110,11 +107,10 @@ class HomeScreen extends StatelessWidget {
                     color: const Color(0xFFAB47BC),
                     onTap: () => context.go('/social'),
                   ),
-                ]),
+                ],
               ),
-            ),
-            const SliiverToBoxAdapter(child: SizedBox(height: 32)),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -178,10 +174,3 @@ class _FeatureCard extends StatelessWidget {
     );
   }
 }
-
-// Aliases to avoid repeated typing errors in this session
-typedef SliiverToBoxAdapter = SliverToBoxAdapter;
-typedef SliiverPadding = SliiverPadding;
-typedef SliiverGrid = SliiverGrid;
-typedef SliiverGridDelegateWithFixedCrossAxisCount = SliiverGridDelegateWithFixedCrossAxisCount;
-typedef SliiverChildListDelegate = SliiverChildListDelegate;
