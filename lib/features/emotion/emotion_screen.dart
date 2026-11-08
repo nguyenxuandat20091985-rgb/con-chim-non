@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
+import '../../core/services/storage_service.dart';
 import '../../core/theme/app_theme.dart';
+import '../../shared/models/emotion_entry.dart';
 import 'calm_space_screen.dart';
 
 class EmotionScreen extends StatefulWidget {
@@ -13,8 +16,9 @@ class EmotionScreen extends StatefulWidget {
 class _EmotionScreenState extends State<EmotionScreen> {
   String? _selectedEmotion;
   int _intensity = 3;
+  bool _saving = false;
 
-  final List<_Emotion> _emotions = [
+  final List<_Emotion> _emotions = const [
     _Emotion(id: 'happy', label: 'Vui', emoji: '😊', color: Color(0xFFFFB74D)),
     _Emotion(id: 'calm', label: 'Bình yên', emoji: '😌', color: Color(0xFF81D4FA)),
     _Emotion(id: 'sad', label: 'Buồn', emoji: '😢', color: Color(0xFF64B5F6)),
@@ -35,6 +39,36 @@ class _EmotionScreenState extends State<EmotionScreen> {
     'excited': ['Chia sẻ niềm vui', 'Ghi lại khoảnh khắc', 'Thở đều để giữ bình tĩnh'],
     'confused': ['Hỏi người lớn để làm rõ', 'Viết ra những gì đang thắc mắc', 'Tạm dừng và quan sát'],
   };
+
+  Future<void> _saveEmotion() async {
+    if (_selectedEmotion == null || _saving) return;
+
+    setState(() => _saving = true);
+
+    final emotion = _emotions.firstWhere((e) => e.id == _selectedEmotion);
+    final entry = EmotionEntry(
+      id: const Uuid().v4(),
+      emotionId: emotion.id,
+      emotionLabel: emotion.label,
+      intensity: _intensity,
+      createdAt: DateTime.now(),
+    );
+
+    try {
+      await StorageService().saveEmotion(entry);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Đã ghi nhận cảm xúc của bạn')),
+      );
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Không lưu được. Thử lại nhé.')),
+      );
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,13 +195,15 @@ class _EmotionScreenState extends State<EmotionScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đã ghi nhận cảm xúc của bạn')),
-                    );
-                  },
-                  icon: const Icon(Icons.check_rounded),
-                  label: const Text('Ghi nhận cảm xúc'),
+                  onPressed: _saving ? null : _saveEmotion,
+                  icon: _saving
+                      ? const SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Icon(Icons.check_rounded),
+                  label: Text(_saving ? 'Đang lưu...' : 'Ghi nhận cảm xúc'),
                 ),
               ),
 
@@ -177,9 +213,7 @@ class _EmotionScreenState extends State<EmotionScreen> {
                 child: OutlinedButton.icon(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const CalmSpaceScreen(),
-                      ),
+                      MaterialPageRoute(builder: (_) => const CalmSpaceScreen()),
                     );
                   },
                   icon: const Icon(Icons.spa_rounded),
