@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../core/services/schedule_storage.dart';
 import '../../core/theme/app_theme.dart';
+import '../../shared/models/schedule_item.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -10,24 +12,58 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  final List<_ScheduleItem> _items = [
-    _ScheduleItem(id: '1', title: 'Thức dậy & vệ sinh cá nhân', emoji: '🌅', isDone: true),
-    _ScheduleItem(id: '2', title: 'Ăn sáng', emoji: '🍳', isDone: true),
-    _ScheduleItem(id: '3', title: 'Đến trường / Học online', emoji: '📚', isDone: false),
-    _ScheduleItem(id: '4', title: 'Giờ ra chơi / Nghỉ giữa giờ', emoji: '⚽', isDone: false),
-    _ScheduleItem(id: '5', title: 'Ăn trưa', emoji: '🍱', isDone: false),
-    _ScheduleItem(id: '6', title: 'Làm bài tập', emoji: '✏️', isDone: false),
-    _ScheduleItem(id: '7', title: 'Thời gian tự do', emoji: '🎮', isDone: false),
-    _ScheduleItem(id: '8', title: 'Ăn tối & chuẩn bị đi ngủ', emoji: '🌙', isDone: false),
-  ];
+  List<ScheduleItem> _items = [];
+  bool _loading = true;
 
-  void _toggleDone(String id) {
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    await ScheduleStorage().init();
+    final saved = ScheduleStorage().loadItems();
+
+    if (saved.isNotEmpty) {
+      setState(() {
+        _items = saved;
+        _loading = false;
+      });
+    } else {
+      final defaults = [
+        const ScheduleItem(id: '1', title: 'Thức dậy & vệ sinh cá nhân', emoji: '🌅', order: 0),
+        const ScheduleItem(id: '2', title: 'Ăn sáng', emoji: '🍳', order: 1),
+        const ScheduleItem(id: '3', title: 'Đến trường / Học online', emoji: '📚', order: 2),
+        const ScheduleItem(id: '4', title: 'Giờ ra chơi / Nghỉ giữa giờ', emoji: '⚽', order: 3),
+        const ScheduleItem(id: '5', title: 'Ăn trưa', emoji: '🍱', order: 4),
+        const ScheduleItem(id: '6', title: 'Làm bài tập', emoji: '✏️', order: 5),
+        const ScheduleItem(id: '7', title: 'Thời gian tự do', emoji: '🎮', order: 6),
+        const ScheduleItem(id: '8', title: 'Ăn tối & chuẩn bị đi ngủ', emoji: '🌙', order: 7),
+      ];
+      await ScheduleStorage().saveItems(defaults);
+      setState(() {
+        _items = defaults;
+        _loading = false;
+      });
+    }
+  }
+
+  Future<void> _toggleDone(String id) async {
+    final index = _items.indexWhere((e) => e.id == id);
+    if (index == -1) return;
+
+    final item = _items[index];
+    final updated = item.copyWith(
+      isDone: !item.isDone,
+      completedAt: !item.isDone ? DateTime.now() : null,
+    );
+
     setState(() {
-      final index = _items.indexWhere((e) => e.id == id);
-      if (index != -1) {
-        _items[index] = _items[index].copyWith(isDone: !_items[index].isDone);
-      }
+      _items = List.from(_items)..[index] = updated;
     });
+
+    await ScheduleStorage().saveItems(_items);
   }
 
   @override
@@ -39,99 +75,68 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         title: const Text('Lịch trình hôm nay'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.add_rounded),
-            tooltip: 'Thêm hoạt động',
-          ),
-        ],
       ),
-      body: Column(
-        children: [
-          Container(
-            margin: const EdgeInsets.all(16),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
-              border: Border.all(color: AppTheme.surfaceVariant),
-            ),
-            child: Column(
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Tiến độ hôm nay',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    Text(
-                      '$completed/$total',
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: AppTheme.primary,
-                            fontWeight: FontWeight.w700,
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(AppTheme.radiusLarge),
+                    border: Border.all(color: AppTheme.surfaceVariant),
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Tiến độ hôm nay', style: Theme.of(context).textTheme.titleMedium),
+                          Text(
+                            '$completed/$total',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  color: AppTheme.primary,
+                                  fontWeight: FontWeight.w700,
+                                ),
                           ),
-                    ),
-                  ],
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: LinearProgressIndicator(
+                          value: total == 0 ? 0 : completed / total,
+                          minHeight: 10,
+                          backgroundColor: AppTheme.surfaceVariant,
+                          valueColor: const AlwaysStoppedAnimation(AppTheme.secondary),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: LinearProgressIndicator(
-                    value: total == 0 ? 0 : completed / total,
-                    minHeight: 10,
-                    backgroundColor: AppTheme.surfaceVariant,
-                    valueColor: const AlwaysStoppedAnimation(AppTheme.secondary),
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                    itemCount: _items.length,
+                    itemBuilder: (context, index) {
+                      final item = _items[index];
+                      return _ScheduleTile(
+                        item: item,
+                        onToggle: () => _toggleDone(item.id),
+                      );
+                    },
                   ),
                 ),
               ],
             ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-              itemCount: _items.length,
-              itemBuilder: (context, index) {
-                final item = _items[index];
-                return _ScheduleTile(
-                  item: item,
-                  onToggle: () => _toggleDone(item.id),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ScheduleItem {
-  final String id;
-  final String title;
-  final String emoji;
-  final bool isDone;
-
-  const _ScheduleItem({
-    required this.id,
-    required this.title,
-    required this.emoji,
-    required this.isDone,
-  });
-
-  _ScheduleItem copyWith({bool? isDone}) {
-    return _ScheduleItem(
-      id: id,
-      title: title,
-      emoji: emoji,
-      isDone: isDone ?? this.isDone,
     );
   }
 }
 
 class _ScheduleTile extends StatelessWidget {
-  final _ScheduleItem item;
+  final ScheduleItem item;
   final VoidCallback onToggle;
 
   const _ScheduleTile({required this.item, required this.onToggle});
