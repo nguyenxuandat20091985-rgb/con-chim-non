@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'app.dart';
+import 'core/services/storage_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,13 +15,9 @@ Future<void> main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Khởi tạo Hive
+  // Khởi tạo Hive + StorageService
   await Hive.initFlutter();
-
-  // Có thể mở các box cần thiết ở đây
-  // await Hive.openBox('settings');
-  // await Hive.openBox('emotions');
-  // await Hive.openBox('schedule');
+  await StorageService().init();
 
   runApp(
     const ProviderScope(
