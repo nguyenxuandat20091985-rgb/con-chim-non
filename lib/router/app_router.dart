@@ -8,12 +8,19 @@ import '../features/emotion/emotion_screen.dart';
 import '../features/schedule/schedule_screen.dart';
 import '../features/social/social_screen.dart';
 import '../features/parent/parent_screen.dart';
+import '../features/settings/settings_screen.dart';
+import '../features/splash/splash_screen.dart';
 import '../shared/widgets/main_shell.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/splash',
     routes: [
+      GoRoute(
+        path: '/splash',
+        name: 'splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
       ShellRoute(
         builder: (context, state, child) => MainShell(child: child),
         routes: [
@@ -58,6 +65,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/parent',
         name: 'parent',
         builder: (context, state) => const ParentScreen(),
+      ),
+      GoRoute(
+        path: '/settings',
+        name: 'settings',
+        builder: (context, state) => const SettingsScreen(),
       ),
     ],
   );
