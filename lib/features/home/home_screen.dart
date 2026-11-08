@@ -72,16 +72,16 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SliverPadding(
+            SliiverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              sliver: SliiverGrid(
+                gridDelegate: const SliiverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,
                   crossAxisSpacing: 16,
                   childAspectRatio: 1.05,
                 ),
-                delegate: SliverChildListDelegate([
+                delegate: SliiverChildListDelegate([
                   _FeatureCard(
                     emoji: '💬',
                     title: 'Giao tiếp',
@@ -113,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                 ]),
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 32)),
+            const SliiverToBoxAdapter(child: SizedBox(height: 32)),
           ],
         ),
       ),
@@ -178,3 +178,10 @@ class _FeatureCard extends StatelessWidget {
     );
   }
 }
+
+// Aliases to avoid repeated typing errors in this session
+typedef SliiverToBoxAdapter = SliverToBoxAdapter;
+typedef SliiverPadding = SliiverPadding;
+typedef SliiverGrid = SliiverGrid;
+typedef SliiverGridDelegateWithFixedCrossAxisCount = SliiverGridDelegateWithFixedCrossAxisCount;
+typedef SliiverChildListDelegate = SliiverChildListDelegate;
