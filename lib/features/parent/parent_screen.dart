@@ -20,30 +20,22 @@ class ParentScreen extends StatelessWidget {
           _ParentTile(
             icon: Icons.favorite_rounded,
             title: 'Nhật ký cảm xúc',
-            subtitle: 'Xem xu hướng cảm xúc 7/30 ngày gần nhất',
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Tính năng đang được hoàn thiện')),
-              );
-            },
+            subtitle: 'Xem các lần ghi nhận cảm xúc của trẻ',
+            onTap: () => context.push('/emotion-report'),
           ),
           _ParentTile(
             icon: Icons.calendar_month_rounded,
             title: 'Tiến độ lịch trình',
-            subtitle: 'Tỷ lệ hoàn thành nhiệm vụ hàng ngày',
-            onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Tính năng đang được hoàn thiện')),
-              );
-            },
+            subtitle: 'Xem trong tab Lịch trình của trẻ',
+            onTap: () => context.go('/schedule'),
           ),
           _ParentTile(
             icon: Icons.chat_rounded,
             title: 'Lịch sử giao tiếp',
-            subtitle: 'Các câu trẻ đã sử dụng gần đây',
+            subtitle: 'Tính năng sắp có',
             onTap: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Tính năng đang được hoàn thiện')),
+                const SnackBar(content: Text('Tính năng sắp có')),
               );
             },
           ),
